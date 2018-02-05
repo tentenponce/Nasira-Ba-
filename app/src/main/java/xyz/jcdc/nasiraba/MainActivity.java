@@ -10,6 +10,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -59,7 +60,8 @@ public class MainActivity extends AppCompatActivity {
     @BindView(R.id.lenny)
     TextView lenny;
 
-    private LinkedHashMap<String, List<Broken>> brokenHashMap = new LinkedHashMap<>();
+    @BindView(R.id.train_availability_container)
+    LinearLayout train_availability_container;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -193,7 +195,6 @@ public class MainActivity extends AppCompatActivity {
         protected void onPreExecute() {
             super.onPreExecute();
             Log.d(TAG, "onPreExecute: " + "Fetching");
-            materialProgressBar.setVisibility(View.VISIBLE);
         }
 
         @Override
@@ -209,6 +210,10 @@ public class MainActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(Document document) {
             super.onPostExecute(document);
+
+            if (document == null)
+                return;
+
             Log.d(TAG, "onCreate: " + document.title());
 
             Elements news_main_item = document.getElementsByAttributeValueContaining("class", "page-preview-content");
@@ -220,8 +225,10 @@ public class MainActivity extends AppCompatActivity {
                 train_availability.setText(p_text);
             }
 
-            materialProgressBar.setVisibility(View.GONE);
+            train_availability_container.setVisibility(View.VISIBLE);
         }
+
+    }
 
     @Override
     public void onBackPressed() {
@@ -238,4 +245,5 @@ public class MainActivity extends AppCompatActivity {
                 })
                 .show();
     }
+
 }
